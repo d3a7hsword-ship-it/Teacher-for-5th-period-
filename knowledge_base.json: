@@ -1,0 +1,13 @@
+import json
+import requests
+
+# URL to the raw JSON file on GitHub
+url = "https://raw.githubusercontent.com//TeacherAI/main/D3a7hsword-ship-itknowledge_base.json"
+
+try:
+    response = requests.get(url)
+    knowledge_base = response.json()
+    print("Knowledge base loaded successfully!")
+except Exception as e:
+    print("Failed to load knowledge base:", e)
+    knowledge_base = {}
