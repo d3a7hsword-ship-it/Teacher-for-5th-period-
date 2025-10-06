@@ -1,0 +1,55 @@
+# chatbot.py
+import datetime
+from knowledge_base import knowledge_base
+
+def get_response(user_input):
+    user_input = user_input.lower()
+
+    # Greetings
+    for key, response in knowledge_base["greetings"].items():
+        if key in user_input:
+            return response
+
+    # Definitions
+    for subject, topics in knowledge_base["definitions"].items():
+        for key, response in topics.items():
+            if key in user_input:
+                return response
+
+    # Date/Time
+    now = datetime.datetime.now()
+    if "day" in user_input:
+        return knowledge_base["date_time"]["day"].format(day=now.strftime("%A"))
+    if "date" in user_input:
+        return knowledge_base["date_time"]["date"].format(date=now.strftime("%A, %B %d, %Y"))
+    if "time" in user_input:
+        return knowledge_base["date_time"]["time"].format(time=now.strftime("%I:%M %p"))
+
+    # Fun
+    for key, response in knowledge_base["fun"].items():
+        if key in user_input:
+            return response
+
+    # Memory
+    if "my name is" in user_input:
+        name = user_input.split("my name is")[-1].strip()
+        knowledge_base["memory"]["name"] = name
+        return f"Nice to meet you, {name}!"
+    if "what is my name" in user_input:
+        name = knowledge_base["memory"]["name"]
+        if name:
+            return f"Your name is {name}."
+        else:
+            return "I don't know your name yet."
+
+    # Placeholder response for unknown questions
+    return "I'm a teacher AI. Ask me about science, math, technology, or time!"
+
+# Chat loop
+print("AI Teacher: Hello! Ask me a question, or type 'bye' to quit.")
+while True:
+    user_input = input("You: ")
+    if user_input.lower() == "bye":
+        print("AI Teacher: Goodbye!")
+        break
+    print("AI Teacher:", get_response(user_input))
