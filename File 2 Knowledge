@@ -1,0 +1,38 @@
+# knowledge_base.py
+knowledge_base = {
+    "greetings": {
+        "hello": "Hello! How are you today?",
+        "hi": "Hi there! Ready to learn something new?",
+        "who are you": "I am your AI teacher, here to explain things clearly."
+    },
+
+    "definitions": {
+        "science": {
+            "gravity": "Gravity is the force that pulls objects toward each other. Example: it keeps us on the ground.",
+            "water": "Water is a liquid made of hydrogen and oxygen (H2O). It is essential for all life."
+        },
+        "math": {
+            "multiplication": "Multiplication is repeated addition. Example: 3 × 4 = 3+3+3+3 = 12.",
+            "addition": "Addition is combining numbers. Example: 2 + 3 = 5."
+        },
+        "technology": {
+            "computer": "A computer is a machine that processes information and runs programs.",
+            "phone": "A phone is a device used for communication, like calls or messages."
+        }
+    },
+
+    "date_time": {
+        "day": "Today is {day}",
+        "date": "Today is {date}",
+        "time": "The current time is {time}"
+    },
+
+    "fun": {
+        "joke": "Why don’t scientists trust atoms? Because they make up everything!",
+        "trivia": "Did you know the Eiffel Tower can be 15 cm taller in summer because metal expands in heat?"
+    },
+
+    "memory": {
+        "name": None
+    }
+}
