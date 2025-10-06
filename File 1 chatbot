@@ -1,17 +1,31 @@
 # chatbot.py
 import datetime
-from knowledge_base import knowledge_base
+import json
+import requests
 
-def get_response(user_input):
+# URL to your knowledge file on GitHub
+# IMPORTANT: Replace YOUR_USERNAME with your actual GitHub username
+GITHUB_JSON_URL = "https://raw.githubusercontent.com/YOUR_USERNAME/TeacherAI/main/knowledge_online.json"
+
+def load_knowledge():
+    try:
+        response = requests.get(GITHUB_JSON_URL)
+        response.raise_for_status()
+        return response.json()
+    except Exception as e:
+        print("Error loading online knowledge:", e)
+        return {}
+
+def get_response(user_input, knowledge):
     user_input = user_input.lower()
 
     # Greetings
-    for key, response in knowledge_base["greetings"].items():
+    for key, response in knowledge.get("greetings", {}).items():
         if key in user_input:
             return response
 
     # Definitions
-    for subject, topics in knowledge_base["definitions"].items():
+    for subject, topics in knowledge.get("definitions", {}).items():
         for key, response in topics.items():
             if key in user_input:
                 return response
@@ -19,37 +33,22 @@ def get_response(user_input):
     # Date/Time
     now = datetime.datetime.now()
     if "day" in user_input:
-        return knowledge_base["date_time"]["day"].format(day=now.strftime("%A"))
+        return f"Today is {now.strftime('%A')}"
     if "date" in user_input:
-        return knowledge_base["date_time"]["date"].format(date=now.strftime("%A, %B %d, %Y"))
+        return f"Today is {now.strftime('%A, %B %d, %Y')}"
     if "time" in user_input:
-        return knowledge_base["date_time"]["time"].format(time=now.strftime("%I:%M %p"))
+        return f"The current time is {now.strftime('%I:%M %p')}"
 
-    # Fun
-    for key, response in knowledge_base["fun"].items():
-        if key in user_input:
-            return response
+    # Fallback
+    return "I’m still learning — try asking about science, math, or time!"
 
-    # Memory
-    if "my name is" in user_input:
-        name = user_input.split("my name is")[-1].strip()
-        knowledge_base["memory"]["name"] = name
-        return f"Nice to meet you, {name}!"
-    if "what is my name" in user_input:
-        name = knowledge_base["memory"]["name"]
-        if name:
-            return f"Your name is {name}."
-        else:
-            return "I don't know your name yet."
+# Load knowledge dynamically
+knowledge_base = load_knowledge()
 
-    # Placeholder response for unknown questions
-    return "I'm a teacher AI. Ask me about science, math, technology, or time!"
-
-# Chat loop
 print("AI Teacher: Hello! Ask me a question, or type 'bye' to quit.")
 while True:
     user_input = input("You: ")
     if user_input.lower() == "bye":
         print("AI Teacher: Goodbye!")
         break
-    print("AI Teacher:", get_response(user_input))
+    print("AI Teacher:", get_response(user_input, knowledge_base))
